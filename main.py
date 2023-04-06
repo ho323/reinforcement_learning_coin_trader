@@ -5,12 +5,12 @@ import csv
 import pandas as pd
 from datetime import datetime
 
-ohlcv_path = ["data/btc_usdt_ohlcv_5m.csv", "data/btc_usdt_ohlcv_1h.csv", 
-              "data/btc_usdt_ohlcv_4h.csv", "data/btc_usdt_ohlcv_1d.csv", 
-              "data/btc_usdt_ohlcv_1w.csv"]
+ohlcv_path = ["data/btc_usdt_ohlcv_1m.csv", "data/btc_usdt_ohlcv_5m.csv", 
+              "data/btc_usdt_ohlcv_1h.csv", "data/btc_usdt_ohlcv_4h.csv", 
+              "data/btc_usdt_ohlcv_1d.csv", "data/btc_usdt_ohlcv_1w.csv"]
 
 url = "https://api.binance.com/api/v3/klines"
-interval = ["5m", "1h", "4h", "1d", "1w"]
+interval = ["1m", "5m", "1h", "4h", "1d", "1w"]
 symbol = "BTCUSDT"
 limit = 1000
 
@@ -35,9 +35,11 @@ while True:
                     writer.writerow([dt_str, open_price, high_price, low_price, close_price, volume])
         else:
             print("Error:", response.status_code)
-        
+
         df = pd.read_csv(ohlcv_path[i])  # 중복된 행이 있는 csv 파일을 불러옵니다.
         df.drop_duplicates(["Timestamp"],inplace=True)  # 중복된 행을 제거합니다.
         df.to_csv(ohlcv_path[i], index=False)    # 결과를 새로운 csv 파일로 저장합니다.
 
-    time.sleep(300)  # 5분 대기
+    print(datetime.now(), " 수집 완료")
+
+    time.sleep(3600)  # 1시간 대기
